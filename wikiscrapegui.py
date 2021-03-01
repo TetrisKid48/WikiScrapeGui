@@ -8,27 +8,28 @@ linktemp = "https://en.wikipedia.org/wiki/"
 sg.theme('Material1')
 
 pagelayout = [[sg.Text("Enter the name of the page you would like to scrape.")],
-              [sg.InputText(key='pagename')],
+              [sg.InputText(size=(37, 1), key='pagename', font="Courier")],
               [sg.Button("Get Content"), sg.Button("Get HTML")],
-              [sg.Text(size=(80, 1))],
-              [sg.Text(size=(80, 1), key="PAGE-STAT")],
-              [sg.ML(size=(80, 8), key="PAGE-OUT")],
-              [sg.Text(size=(80, 1))]]
+              [sg.Text(size=(40, 1))],
+              [sg.Text(size=(40, 1), key="PAGE-STAT")],
+              [sg.ML(size=(37, 8), key="PAGE-OUT", font="Courier")],
+              [sg.Text(size=(40, 1))]]
 
 catlayout = [[sg.Text("Enter the name of the category you would like to scrape.")],
-             [sg.Text("Category:"), sg.InputText(key='catname')],
+             [sg.Text("Category:", font="Courier"), sg.InputText(size=(27, 1), key='catname', font="Courier")],
              [sg.Button("Scrape Subcategories"), sg.Button("Scrape Pages in Category")],
-             [sg.Text(size=(80, 1))],
-             [sg.Text(size=(80, 1), key="CAT-STAT")],
-             [sg.ML(size=(80, 8), key="CAT-OUT")],
-             [sg.Text(size=(80, 1))]]
+             [sg.Text(size=(40, 1))],
+             [sg.Text(size=(40, 1), key="CAT-STAT")],
+             [sg.ML(size=(37, 8), key="CAT-OUT", font="Courier")],
+             [sg.Text(size=(40, 1))]]
 
-aboutlayout = [[sg.Text("WikiScrapeGui by TetrisKid48", font="Courier")],
-               [sg.Text("Developed in 2021", font="Courier")],
-               [sg.Text("", size=(10, 2))],
-               [sg.Text("Special Thanks to:")],
-               [sg.Text("PySimpleGui")],
-               [sg.Text("jgoldsmith")]]
+aboutlayout = [[sg.Text("")],
+               [sg.Text("WikiScrapeGui by TetrisKid48", justification='center', font="Courier", size=(40, 1))],
+               [sg.Text("Developed in 2021", justification='center', font="Courier", size=(40, 1))],
+               [sg.Text("")],
+               [sg.Text("Special Thanks to:", justification='center', font="Courier", size=(40, 1))],
+               [sg.Text("PySimpleGui", justification='center', font="Courier", size=(40, 1))],
+               [sg.Text("jgoldsmith", justification='center', font="Courier", size=(40, 1))]]
 
 mainlayout = [[sg.Image('wikiscrapegui.png', pad=((115, 115), (15, 10)), key='LOGO', size=(200, 25))],
               [sg.TabGroup([[sg.Tab('Page', pagelayout), sg.Tab('Category', catlayout),
