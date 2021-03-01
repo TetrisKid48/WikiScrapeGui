@@ -10,5 +10,9 @@ Type this into the command prompt to install the needed libraries:
 Run `wikiscrapegui.py`  
 Enjoy!
 
+# Screenshots
+![image](https://user-images.githubusercontent.com/67118737/109449727-2a73ca00-7a17-11eb-9543-d3cd0b7e391c.png)
+![image](https://user-images.githubusercontent.com/67118737/109449763-40818a80-7a17-11eb-85ac-9881c6413484.png)  
+
 # More Information
 Page content or HTML code will be saved to an output.txt in the same directory as the program.
