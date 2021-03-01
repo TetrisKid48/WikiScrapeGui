@@ -9,3 +9,6 @@ Type this into the command prompt to install the needed libraries:
 `pip install wikipedia pysimplegui`  
 Run `wikiscrapegui.py`  
 Enjoy!
+
+# More Information
+Page content will be saved to an output.txt in the same directory as the program.
