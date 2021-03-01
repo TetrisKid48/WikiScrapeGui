@@ -7,117 +7,92 @@ linktemp = "https://en.wikipedia.org/wiki/"
 
 sg.theme('Material1')
 
-mainlayout = [[sg.Image('wikiscrapegui.png', pad=((100, 100), (15, 10)), key='LOGO', size=(200, 25))],
-              [sg.Text('Would you like to scrape one page, or an entire category?', justification='center')],
-              [sg.Button('Page', size=(10, 1)), sg.Button('Category', size=(10, 1))]]
+pagelayout = [[sg.Text("Enter the name of the page you would like to scrape.")],
+              [sg.InputText(key='pagename')],
+              [sg.Button("Get Content"), sg.Button("Get HTML")],
+              [sg.Text(size=(80, 1))],
+              [sg.Text(size=(80, 1), key="PAGE-STAT")],
+              [sg.ML(size=(80, 8), key="PAGE-OUT")],
+              [sg.Text(size=(80, 1))]]
 
-window = sg.Window('WikiScrapeGui', size=(400, 125)).Layout(mainlayout)
+catlayout = [[sg.Text("Enter the name of the category you would like to scrape.")],
+             [sg.Text("Category:"), sg.InputText(key='catname')],
+             [sg.Button("Scrape Subcategories"), sg.Button("Scrape Pages in Category")],
+             [sg.Text(size=(80, 1))],
+             [sg.Text(size=(80, 1), key="CAT-STAT")],
+             [sg.ML(size=(80, 8), key="CAT-OUT")],
+             [sg.Text(size=(80, 1))]]
+
+mainlayout = [[sg.Image('wikiscrapegui.png', pad=((115, 115), (15, 10)), key='LOGO', size=(200, 25))],
+              [sg.TabGroup([[sg.Tab('Page', pagelayout), sg.Tab('Category', catlayout)]], key='TAB-GROUP')]]
+
+window = sg.Window('WikiScrapeGui', size=(430, 375)).Layout(mainlayout)
 print("[LOG] Main menu has been launched.")
-
-while True:  # Event Loop
+while True:
     event, values = window.read()
     if event in (sg.WIN_CLOSED, "Exit"):
         break
-    if event == "Page":
-        pagelayout = [[sg.Text("Enter the name of the page you would like to scrape.")],
-                      [sg.InputText(key='pagename')],
-                      [sg.Button("Get Content"), sg.Cancel()]]
+    if event == "Get Content":
+        name = str(values['pagename'])
+        window['PAGE-STAT'].update("")
+        window['PAGE-OUT'].update("")
 
-        pagewindow = sg.Window("Scrape Page").Layout(pagelayout)
-        while True:
-            event, values = pagewindow.read()
-            if event in (sg.WIN_CLOSED, 'Exit'):
-                pagewindow.close()
-                break
-            if event == "Cancel":
-                pagewindow.close()
-                break
-            if event == "Get Content":
-                name = str(values['pagename'])
-                try:
-                    content = wikipedia.page(name, auto_suggest=False).content
-                    textfile.write(content)
+        try:
+            content = wikipedia.page(name, auto_suggest=False).content
+            textfile.write(content)
 
-                    outputlayout = [[sg.Text("Success!")],
-                                    [sg.Text("This text was saved to output.txt:")],
-                                    [sg.ML(content, size=(80, 8))],
-                                    [sg.Button("Back")]]
+            window['PAGE-STAT'].update("Success! This text was saved to output.txt:", text_color='green')
+            window['PAGE-OUT'].update(content)
 
-                    pageoutput = sg.Window("Output Success").Layout(outputlayout)
-                    while True:
-                        event, values = pageoutput.read()
-                        if event in (sg.WIN_CLOSED, 'Exit'):
-                            pageoutput.close()
-                            break
-                        if event == "Back":
-                            pageoutput.close()
-                            break
+        except wikipedia.exceptions.PageError:
+            window['PAGE-STAT'].update("Error Occured. Couldn't find a page with that title.", text_color='red')
+        except wikipedia.exceptions.DisambiguationError:
+            window['PAGE-STAT'].update("Error Occured. Page name is not specific enough.", text_color='red')
 
-                except wikipedia.exceptions.PageError:
-                    sg.popup("Error Occured", "Couldn't find a page with that title.")
-                    pagewindow.close()
-                    break
-                except wikipedia.exceptions.DisambiguationError:
-                    sg.popup("Error Occured", "Page name is not specific enough.")
-                    pagewindow.close()
-                    break
+    if event == "Get HTML":
+        window['PAGE-STAT'].update("")
+        window['PAGE-OUT'].update("")
+        pagename = str(values['pagename'])
+        pagename = pagename.replace(" ", "_")
+        link = linktemp + pagename
 
-    if event == "Category":
-        catelayout = [[sg.Text("Enter the name of the category you would like to scrape.")],
-                      [sg.Text("Category:"), sg.InputText(key='catname')],
-                      [sg.Text("Would you like to scrape the subcategories or the page names?")],
-                      [sg.Button("Subcategories"), sg.Button("Page Names"), sg.Cancel()]]
+        try:
+            fp = urllib.request.urlopen(link)
+            mybytes = fp.read()
+            htmlcode = mybytes.decode("utf8")
+            fp.close()
 
-        catwindow = sg.Window("Scrape Category").Layout(catelayout)
-        while True:
-            event, values = catwindow.read()
-            if event in (sg.WIN_CLOSED, 'Exit'):
-                catwindow.close()
-                break
-            if event == "Cancel":
-                catwindow.close()
-                break
-            if event == "Subcategories" or "Page Names":
-                catname = str(values['catname'])
-                catname = catname.replace(" ", "_")
-                catname = "Category:" + catname
-                link = linktemp + catname
+            window['PAGE-STAT'].update("Success! This text was saved to output.txt:", text_color='green')
+            window['PAGE-OUT'].update(htmlcode)
 
-                try:
-                    fp = urllib.request.urlopen(link)
-                    mybytes = fp.read()
-                    htmlcode = mybytes.decode("utf8")
-                    fp.close()
-                except urllib.error.HTTPError:
-                    sg.popup("Error Occured", "Category page link could not be opened.")
-                    catwindow.close()
-                    break
+        except urllib.error.HTTPError:
+            window['PAGE-STAT'].update("Error Occured. Page link could not be opened.", text_color='green')
 
-            if event == "Subcategories":
-                print("[LOG] User pressed 'Subcategories' button.")
-                subcatlayout = [[sg.Text("This feature is not yet finished.", text_color='green', key='SUBCAT-STATUS')],
-                                [sg.ML(size=(80, 8), key='SUBCAT-OUTPUT')],
-                                [sg.Button("OK")]]
+    if event == "Scrape Subcategories" or "Scrape Pages in Category":
+        print("[LOG] A scrape button was pressed in the Category tab.")
 
-                subcatwindow = sg.Window("Subcategory Output").Layout(subcatlayout)
-                while True:
-                    event, values = subcatwindow.read()
-                    if event in (sg.WIN_CLOSED, 'OK'):
-                        subcatwindow.close()
-                        break
+        window['CAT-STAT'].update("")
+        catname = str(values['catname'])
+        catname = catname.replace(" ", "_")
+        catname = "Category:" + catname
+        link = linktemp + catname
 
-            if event == "Page Names":
-                print("[LOG] User pressed 'Page Names' button.")
-                pageslayout = [[sg.Text("This feature is not yet finished.", text_color='green', key='SUBCAT-STATUS')],
-                               [sg.ML(size=(80, 8), key='SUBCAT-OUTPUT')],
-                               [sg.Button("OK")]]
+        try:
+            fp = urllib.request.urlopen(link)
+            mybytes = fp.read()
+            htmlcode = mybytes.decode("utf8")
+            fp.close()
+        except urllib.error.HTTPError:
+            window['CAT-STAT'].update("Error Occured. Category page link could not be opened.", text_color='red')
+            event = "Pass"
 
-                pageswindow = sg.Window("Category Pages Output").Layout(pageslayout)
-                while True:
-                    event, values = pageswindow.read()
-                    if event in (sg.WIN_CLOSED, 'OK'):
-                        pageswindow.close()
-                        break
+    if event == "Scrape Subcategories":
+        print("[LOG] User pressed 'Subcategories' button.")
+        window['CAT-STAT'].update("This feature is currently unfinished.", text_color='green')
+
+    if event == "Scrape Pages in Category":
+        print("[LOG] User pressed 'Page Names' button.")
+        window['CAT-STAT'].update("This feature is currently unfinished.", text_color='green')
 
 textfile.close()
 window.close()
