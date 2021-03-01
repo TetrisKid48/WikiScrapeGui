@@ -4,6 +4,7 @@ import PySimpleGUI as sg
 
 textfile = open('output.txt', 'w', encoding="utf-8")
 linktemp = "https://en.wikipedia.org/wiki/"
+pageliststr = ""
 
 sg.theme('Material1')
 
@@ -97,11 +98,39 @@ while True:
 
         if event == "Scrape Subcategories":
             print("[LOG] User pressed 'Subcategories' button.")
+            window['CAT-OUT'].update("")
             window['CAT-STAT'].update("This feature is currently unfinished.", text_color='green')
 
         if event == "Scrape Pages in Category":
             print("[LOG] User pressed 'Page Names' button.")
-            window['CAT-STAT'].update("This feature is currently unfinished.", text_color='green')
+
+            location1 = htmlcode.index("This list may not reflect recent changes")
+            location2 = htmlcode.index("<div class=\"printfooter\">") + 1
+            htmlcode = htmlcode[location1:location2]
+
+            location1 = htmlcode.index("<li>")
+            location2 = htmlcode.index("</ul></div></div>")
+            crudelist = htmlcode[location1:location2]
+
+            pagelist = crudelist.split("\n")
+            listlen = len(pagelist)
+
+            pageliststr = ""
+
+            for x in range(0, listlen):
+
+                if "<span class=\"redirect-in-category\">" in pagelist[x]:
+                    pagelist[x] = pagelist[x].replace("<span class=\"redirect-in-category\">", "")
+
+                location1 = pagelist[x].index(" title=\"") + 8
+                location2 = pagelist[x].index("\">")
+                pagelist[x] = pagelist[x][location1:location2]
+
+                pageliststr = pageliststr + pagelist[x] + "\n"
+
+            textfile.write(pageliststr)
+            window['CAT-STAT'].update("Success! This text was saved to output.txt:", text_color='green')
+            window['CAT-OUT'].update(pageliststr)
 
 textfile.close()
 window.close()
