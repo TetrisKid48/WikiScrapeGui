@@ -23,8 +23,16 @@ catlayout = [[sg.Text("Enter the name of the category you would like to scrape."
              [sg.ML(size=(80, 8), key="CAT-OUT")],
              [sg.Text(size=(80, 1))]]
 
+aboutlayout = [[sg.Text("WikiScrapeGui by TetrisKid48", font="Courier")],
+               [sg.Text("Developed in 2021", font="Courier")],
+               [sg.Text("", size=(10, 2))],
+               [sg.Text("Special Thanks to:")],
+               [sg.Text("PySimpleGui")],
+               [sg.Text("jgoldsmith")]]
+
 mainlayout = [[sg.Image('wikiscrapegui.png', pad=((115, 115), (15, 10)), key='LOGO', size=(200, 25))],
-              [sg.TabGroup([[sg.Tab('Page', pagelayout), sg.Tab('Category', catlayout)]], key='TAB-GROUP')]]
+              [sg.TabGroup([[sg.Tab('Page', pagelayout), sg.Tab('Category', catlayout),
+                             sg.Tab('About', aboutlayout)]], key='TAB-GROUP')]]
 
 window = sg.Window('WikiScrapeGui', size=(430, 375)).Layout(mainlayout)
 print("[LOG] Main menu has been launched.")
@@ -32,7 +40,7 @@ while True:
     event, values = window.read()
     if event in (sg.WIN_CLOSED, "Exit"):
         break
-    if event == "Get Content":
+    elif event == "Get Content":
         name = str(values['pagename'])
         window['PAGE-STAT'].update("")
         window['PAGE-OUT'].update("")
@@ -49,7 +57,7 @@ while True:
         except wikipedia.exceptions.DisambiguationError:
             window['PAGE-STAT'].update("Error Occured. Page name is not specific enough.", text_color='red')
 
-    if event == "Get HTML":
+    elif event == "Get HTML":
         window['PAGE-STAT'].update("")
         window['PAGE-OUT'].update("")
         pagename = str(values['pagename'])
@@ -68,7 +76,7 @@ while True:
         except urllib.error.HTTPError:
             window['PAGE-STAT'].update("Error Occured. Page link could not be opened.", text_color='green')
 
-    if event == "Scrape Subcategories" or "Scrape Pages in Category":
+    elif event == "Scrape Subcategories" or "Scrape Pages in Category":
         print("[LOG] A scrape button was pressed in the Category tab.")
 
         window['CAT-STAT'].update("")
@@ -86,13 +94,13 @@ while True:
             window['CAT-STAT'].update("Error Occured. Category page link could not be opened.", text_color='red')
             event = "Pass"
 
-    if event == "Scrape Subcategories":
-        print("[LOG] User pressed 'Subcategories' button.")
-        window['CAT-STAT'].update("This feature is currently unfinished.", text_color='green')
+        if event == "Scrape Subcategories":
+            print("[LOG] User pressed 'Subcategories' button.")
+            window['CAT-STAT'].update("This feature is currently unfinished.", text_color='green')
 
-    if event == "Scrape Pages in Category":
-        print("[LOG] User pressed 'Page Names' button.")
-        window['CAT-STAT'].update("This feature is currently unfinished.", text_color='green')
+        if event == "Scrape Pages in Category":
+            print("[LOG] User pressed 'Page Names' button.")
+            window['CAT-STAT'].update("This feature is currently unfinished.", text_color='green')
 
 textfile.close()
 window.close()
