@@ -11,4 +11,4 @@ Run `wikiscrapegui.py`
 Enjoy!
 
 # More Information
-Page content will be saved to an output.txt in the same directory as the program.
+Page content or HTML code will be saved to an output.txt in the same directory as the program.
