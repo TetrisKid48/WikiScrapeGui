@@ -1,5 +1,5 @@
 # WikiScrapeGui
-A GUI for scraping Wikipedia made with PySimpleGui.
+A GUI for scraping Wikipedia made with PySimpleGui.  
 Note: This project is still a work in progress and many features are sure to be added. I'm also planning to release a .exe with PyInstaller every time the code has changed a significant amount.
 
 # Usage
