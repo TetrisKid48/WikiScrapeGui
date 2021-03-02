@@ -9,19 +9,19 @@ pageliststr = ""
 sg.theme('Material1')
 
 pagelayout = [[sg.Text("Enter the name of the page you would like to scrape.")],
-              [sg.InputText(size=(37, 1), key='pagename', font="Courier")],
+              [sg.InputText(size=(40, 1), key='pagename', font="Courier")],
               [sg.Button("Get Content"), sg.Button("Get HTML")],
               [sg.Text(size=(40, 1))],
               [sg.Text(size=(40, 1), key="PAGE-STAT")],
-              [sg.ML(size=(37, 8), key="PAGE-OUT", font="Courier")],
+              [sg.ML(size=(50, 12), key="PAGE-OUT", font=("Courier", 10))],
               [sg.Text(size=(40, 1))]]
 
 catlayout = [[sg.Text("Enter the name of the category you would like to scrape.")],
-             [sg.Text("Category:", font="Courier"), sg.InputText(size=(27, 1), key='catname', font="Courier")],
+             [sg.Text("Category:", font="Courier"), sg.InputText(size=(30, 1), key='catname', font="Courier")],
              [sg.Button("Scrape Subcategories"), sg.Button("Scrape Pages in Category")],
              [sg.Text(size=(40, 1))],
              [sg.Text(size=(40, 1), key="CAT-STAT")],
-             [sg.ML(size=(37, 8), key="CAT-OUT", font="Courier")],
+             [sg.ML(size=(50, 12), key="CAT-OUT", font=("Courier", 10))],
              [sg.Text(size=(40, 1))]]
 
 aboutlayout = [[sg.Text("")],
@@ -32,11 +32,12 @@ aboutlayout = [[sg.Text("")],
                [sg.Text("PySimpleGui", justification='center', font="Courier", size=(40, 1))],
                [sg.Text("jgoldsmith", justification='center', font="Courier", size=(40, 1))]]
 
-mainlayout = [[sg.Image('wikiscrapegui.png', pad=((115, 115), (15, 10)), key='LOGO', size=(200, 25))],
-              [sg.TabGroup([[sg.Tab('Page', pagelayout), sg.Tab('Category', catlayout),
-                             sg.Tab('About', aboutlayout)]], key='TAB-GROUP')]]
+mainlayout = [[sg.Image('wikiscrapegui.png', pad=((0, 0), (15, 15)), key='LOGO', size=(400, 50))],
+              [sg.TabGroup([[sg.Tab('Page', pagelayout, element_justification='c'), sg.Tab('Category', catlayout, element_justification='c'),
+                             sg.Tab('About', aboutlayout, element_justification='c')]],
+                           key='TAB-GROUP', tab_location='top', border_width=10, pad=((10, 10), (10, 10)))]]
 
-window = sg.Window('WikiScrapeGui', size=(430, 375)).Layout(mainlayout)
+window = sg.Window('WikiScrapeGui', size=(500, 500), element_justification='c').Layout(mainlayout)
 print("[LOG] Main menu has been launched.")
 while True:
     event, values = window.read()
