@@ -5,11 +5,13 @@ import PySimpleGUI as sg
 textfile = open('output.txt', 'w', encoding="utf-8")
 linktemp = "https://en.wikipedia.org/wiki/"
 
+icon = b'iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAAEdJREFUWIXt1LERACAIBMHH0iyKIiiK1jA1xIjAu5iRHQIlot8zSfIdNbE80m1NLL4DAAAAAHsZ7v6Ykd5+d/wCAAAAAEBEBwkWCCdsOlQrAAAAAElFTkSuQmCC'
+
 sg.theme('Material1')
 
 pagelayout = [[sg.Text("Enter the name of the page you would like to scrape.")],
               [sg.InputText(size=(40, 1), key='pagename', font="Courier")],
-              [sg.Button("Get Content"), sg.Button("Get HTML")],
+              [sg.Button("Get Content"), sg.Button("Get Page HTML")],
               [sg.Text(size=(40, 1))],
               [sg.Text(size=(40, 1), key="PAGE-STAT")],
               [sg.ML(size=(50, 12), key="PAGE-OUT", font=("Courier", 10))],
@@ -17,7 +19,7 @@ pagelayout = [[sg.Text("Enter the name of the page you would like to scrape.")],
 
 catlayout = [[sg.Text("Enter the name of the category you would like to scrape.")],
              [sg.Text("Category:", font="Courier"), sg.InputText(size=(30, 1), key='catname', font="Courier")],
-             [sg.Button("Scrape Subcategories"), sg.Button("Scrape Pages in Category")],
+             [sg.Button("Get HTML"), sg.Button("Scrape Subcategories"), sg.Button("Scrape Pages in Category")],
              [sg.Text(size=(40, 1))],
              [sg.Text(size=(40, 1), key="CAT-STAT")],
              [sg.ML(size=(50, 12), key="CAT-OUT", font=("Courier", 10))],
@@ -36,7 +38,8 @@ mainlayout = [[sg.Image('wikiscrapegui.png', pad=((0, 0), (15, 15)), key='LOGO',
                              sg.Tab('About', aboutlayout, element_justification='c')]],
                            key='TAB-GROUP', tab_location='top', border_width=10, pad=((10, 10), (10, 10)))]]
 
-window = sg.Window('WikiScrapeGui', size=(500, 500), element_justification='c').Layout(mainlayout)
+window = sg.Window('WikiScrapeGui', size=(500, 500), element_justification='c',
+                   icon=icon).Layout(mainlayout)
 print("[LOG] Main menu has been launched.")
 while True:
     event, values = window.read()
@@ -44,8 +47,6 @@ while True:
         break
     elif event == "Get Content":
         name = str(values['pagename'])
-        window['PAGE-STAT'].update("")
-        window['PAGE-OUT'].update("")
 
         try:
             content = wikipedia.page(name, auto_suggest=False).content
@@ -59,9 +60,7 @@ while True:
         except wikipedia.exceptions.DisambiguationError:
             window['PAGE-STAT'].update("Error Occured. Page name is not specific enough.", text_color='red')
 
-    elif event == "Get HTML":
-        window['PAGE-STAT'].update("")
-        window['PAGE-OUT'].update("")
+    elif event == "Get Page HTML":
         pagename = str(values['pagename'])
         pagename = pagename.replace(" ", "_")
         link = linktemp + pagename
@@ -77,7 +76,26 @@ while True:
             window['PAGE-OUT'].update(htmlcode)
 
         except urllib.error.HTTPError:
-            window['PAGE-STAT'].update("Error Occured. Page link could not be opened.", text_color='green')
+            window['PAGE-STAT'].update("Error Occured. Page link could not be opened.", text_color='red')
+
+    elif event == "Get HTML":
+        catname = str(values['catname'])
+        catname = catname.replace(" ", "_")
+        catname = "Category:" + catname
+        link = linktemp + catname
+
+        try:
+            fp = urllib.request.urlopen(link)
+            mybytes = fp.read()
+            htmlcode = mybytes.decode("utf8")
+            fp.close()
+
+            textfile.write(htmlcode)
+            window['CAT-STAT'].update("Success! This text was saved to output.txt:", text_color='green')
+            window['CAT-OUT'].update(htmlcode)
+
+        except urllib.error.HTTPError:
+            window['CAT-STAT'].update("Error Occured. Page link could not be opened.", text_color='red')
 
     elif event == "Scrape Subcategories" or "Scrape Pages in Category":
         print("[LOG] A scrape button was pressed in the Category tab.")
@@ -157,4 +175,3 @@ while True:
 
 textfile.close()
 window.close()
-
