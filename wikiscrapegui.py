@@ -4,7 +4,6 @@ import PySimpleGUI as sg
 
 textfile = open('output.txt', 'w', encoding="utf-8")
 linktemp = "https://en.wikipedia.org/wiki/"
-pageliststr = ""
 
 sg.theme('Material1')
 
@@ -72,7 +71,7 @@ while True:
             mybytes = fp.read()
             htmlcode = mybytes.decode("utf8")
             fp.close()
-            
+
             textfile.write(htmlcode)
             window['PAGE-STAT'].update("Success! This text was saved to output.txt:", text_color='green')
             window['PAGE-OUT'].update(htmlcode)
@@ -100,8 +99,30 @@ while True:
 
         if event == "Scrape Subcategories":
             print("[LOG] User pressed 'Subcategories' button.")
-            window['CAT-OUT'].update("")
-            window['CAT-STAT'].update("This feature is currently unfinished.", text_color='green')
+
+            location1 = htmlcode.index("<div class=\"mw-category-group\"><h3>") - 6
+            location2 = htmlcode.index("</div></div></div>")
+            htmlcode = htmlcode[location1:location2]
+
+            catlist = htmlcode.split("\n")
+            del catlist[0]
+            listlen = len(catlist)
+
+            catliststr = ""
+
+            for x in range(0, listlen):
+                location1 = catlist[x].index(" title=\"") + 8
+                location2 = catlist[x].index("</a>")
+                catlist[x] = catlist[x][location1:location2]
+
+                location2 = catlist[x].index("\">")
+                catlist[x] = catlist[x][:location2]
+
+                catliststr = catliststr + catlist[x] + "\n"
+
+            textfile.write(catliststr)
+            window['CAT-STAT'].update("Success! This text was saved to output.txt:", text_color='green')
+            window['CAT-OUT'].update(catliststr)
 
         if event == "Scrape Pages in Category":
             print("[LOG] User pressed 'Page Names' button.")
@@ -136,3 +157,4 @@ while True:
 
 textfile.close()
 window.close()
+
