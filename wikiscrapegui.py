@@ -11,7 +11,7 @@ sg.theme('Material1')
 
 pagelayout = [[sg.Text("Enter the name of the page you would like to scrape.")],
               [sg.InputText(size=(40, 1), key='pagename', font="Courier")],
-              [sg.Button("Get Content"), sg.Button("Get Page HTML")],
+              [sg.Button("Get Content"), sg.Button("Get HTML", k="PAGE-HTML")],
               [sg.Text(size=(40, 1))],
               [sg.Text(size=(40, 1), key="PAGE-STAT")],
               [sg.ML(size=(50, 12), key="PAGE-OUT", font=("Courier", 10))],
@@ -19,7 +19,7 @@ pagelayout = [[sg.Text("Enter the name of the page you would like to scrape.")],
 
 catlayout = [[sg.Text("Enter the name of the category you would like to scrape.")],
              [sg.Text("Category:", font="Courier"), sg.InputText(size=(30, 1), key='catname', font="Courier")],
-             [sg.Button("Get HTML"), sg.Button("Scrape Subcategories"), sg.Button("Scrape Pages in Category")],
+             [sg.Button("Get HTML", k="CAT-HTML"), sg.Button("Scrape Subcategories"), sg.Button("Scrape Pages in Category")],
              [sg.Text(size=(40, 1))],
              [sg.Text(size=(40, 1), key="CAT-STAT")],
              [sg.ML(size=(50, 12), key="CAT-OUT", font=("Courier", 10))],
@@ -60,7 +60,7 @@ while True:
         except wikipedia.exceptions.DisambiguationError:
             window['PAGE-STAT'].update("Error Occured. Page name is not specific enough.", text_color='red')
 
-    elif event == "Get Page HTML":
+    elif event == "PAGE-HTML":
         pagename = str(values['pagename'])
         pagename = pagename.replace(" ", "_")
         link = linktemp + pagename
@@ -78,7 +78,7 @@ while True:
         except urllib.error.HTTPError:
             window['PAGE-STAT'].update("Error Occured. Page link could not be opened.", text_color='red')
 
-    elif event == "Get HTML":
+    elif event == "CAT-HTML":
         catname = str(values['catname'])
         catname = catname.replace(" ", "_")
         catname = "Category:" + catname
