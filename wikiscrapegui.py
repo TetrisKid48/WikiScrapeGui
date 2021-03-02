@@ -72,7 +72,8 @@ while True:
             mybytes = fp.read()
             htmlcode = mybytes.decode("utf8")
             fp.close()
-
+            
+            textfile.write(htmlcode)
             window['PAGE-STAT'].update("Success! This text was saved to output.txt:", text_color='green')
             window['PAGE-OUT'].update(htmlcode)
 
