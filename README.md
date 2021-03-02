@@ -11,8 +11,9 @@ Run `wikiscrapegui.py`
 Enjoy!
 
 # Screenshots
-![image](https://user-images.githubusercontent.com/67118737/109449727-2a73ca00-7a17-11eb-9543-d3cd0b7e391c.png)
-![image](https://user-images.githubusercontent.com/67118737/109449763-40818a80-7a17-11eb-85ac-9881c6413484.png)  
+![image](https://user-images.githubusercontent.com/67118737/109577924-7597e680-7ac4-11eb-8d7f-8ad5cc0dd063.png)
+![image](https://user-images.githubusercontent.com/67118737/109577956-821c3f00-7ac4-11eb-8a3a-44d3ace3ca14.png)
+
 
 # More Information
-Page content or HTML code will be saved to an output.txt in the same directory as the program.
+Any scraped data will be saved to an output.txt in the same directory as the program.
