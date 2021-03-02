@@ -11,6 +11,7 @@ Run `wikiscrapegui.py`
 Enjoy!
 
 # Screenshots
+#### Screenshots might not always be perfectly up to date.
 ![image](https://user-images.githubusercontent.com/67118737/109577924-7597e680-7ac4-11eb-8d7f-8ad5cc0dd063.png)
 ![image](https://user-images.githubusercontent.com/67118737/109577956-821c3f00-7ac4-11eb-8a3a-44d3ace3ca14.png)
 
