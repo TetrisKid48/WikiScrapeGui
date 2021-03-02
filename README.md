@@ -19,7 +19,6 @@ Enjoy!
 Any scraped data will be saved to an output.txt in the same directory as the program.
 
 ### Planned features include:
-Infobox scraping  
-Scraping subcategories  
+Infobox scraping
 Scraping "Page Information"  
 Ability to change GUI theme  
