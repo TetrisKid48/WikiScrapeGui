@@ -12,9 +12,8 @@ Enjoy!
 
 # Screenshots
 #### Screenshots might not always be perfectly up to date.
-![image](https://user-images.githubusercontent.com/67118737/109577924-7597e680-7ac4-11eb-8d7f-8ad5cc0dd063.png)
-![image](https://user-images.githubusercontent.com/67118737/109577956-821c3f00-7ac4-11eb-8a3a-44d3ace3ca14.png)
-
+![image](https://user-images.githubusercontent.com/67118737/109688994-de2da480-7b52-11eb-9297-43f8877d73d8.png)
+![image](https://user-images.githubusercontent.com/67118737/109689054-ed145700-7b52-11eb-9d64-a18743d055ea.png)
 
 # More Information
 Any scraped data will be saved to an output.txt in the same directory as the program.
@@ -22,6 +21,5 @@ Any scraped data will be saved to an output.txt in the same directory as the pro
 ### Planned features include:
 Infobox scraping  
 Scraping "Page Information"  
-Adding a "Get HTML" button to the category tab  
 Improved and/or animated logo  
 Ability to change GUI theme  
