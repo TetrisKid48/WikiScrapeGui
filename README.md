@@ -23,3 +23,5 @@ Infobox scraping
 Scraping "Page Information"  
 Improved and/or animated logo  
 Ability to change GUI theme  
+Menu to choose a page when a disambiguation error occurs
+Compatibility with special symbols in URLs
