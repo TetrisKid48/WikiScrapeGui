@@ -2,49 +2,68 @@ import wikipedia
 import urllib.request
 import PySimpleGUI as sg
 
-textfile = open('output.txt', 'w', encoding="utf-8")
+textfile = open('output.txt', "w", encoding="utf-8")
+themefile = open('theme.txt')
 linktemp = "https://en.wikipedia.org/wiki/"
+infodata = ""
 
 icon = b'iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAAEdJREFUWIXt1LERACAIBMHH0iyKIiiK1jA1xIjAu5iRHQIlot8zSfIdNbE80m1NLL4DAAAAAHsZ7v6Ykd5+d/wCAAAAAEBEBwkWCCdsOlQrAAAAAElFTkSuQmCC'
 
-sg.theme('Material1')
+sg.theme(themefile.read())
 
-pagelayout = [[sg.Text("Enter the name of the page you would like to scrape.")],
-              [sg.InputText(size=(40, 1), key='pagename', font="Courier")],
-              [sg.Button("Get Content"), sg.Button("Get HTML", k="PAGE-HTML")],
-              [sg.Text(size=(40, 1))],
-              [sg.Text(size=(40, 1), key="PAGE-STAT")],
-              [sg.ML(size=(50, 12), key="PAGE-OUT", font=("Courier", 10))],
-              [sg.Text(size=(40, 1))]]
 
-catlayout = [[sg.Text("Enter the name of the category you would like to scrape.")],
-             [sg.Text("Category:", font="Courier"), sg.InputText(size=(30, 1), key='catname', font="Courier")],
-             [sg.Button("Get HTML", k="CAT-HTML"), sg.Button("Scrape Subcategories"), sg.Button("Scrape Pages in Category")],
-             [sg.Text(size=(40, 1))],
-             [sg.Text(size=(40, 1), key="CAT-STAT")],
-             [sg.ML(size=(50, 12), key="CAT-OUT", font=("Courier", 10))],
-             [sg.Text(size=(40, 1))]]
+def make_window():
+    pagelayout = [[sg.Text("Enter the name of the page you would like to scrape.")],
+                  [sg.InputText(size=(40, 1), key='pagename', font="Courier")],
+                  [sg.Button("Get Content"), sg.Button("Get HTML", k="PAGE-HTML"), sg.Button("Scrape Infobox")],
+                  [sg.Text(size=(40, 1))],
+                  [sg.Text(size=(50, 1), key="PAGE-STAT", justification="center")],
+                  [sg.ML(size=(50, 12), key="PAGE-OUT", font=("Courier", 10))],
+                  [sg.Text(size=(40, 1))]]
 
-aboutlayout = [[sg.Text("")],
-               [sg.Text("WikiScrapeGui by TetrisKid48", justification='center', font="Courier", size=(40, 1))],
-               [sg.Text("Developed in 2021", justification='center', font="Courier", size=(40, 1))],
-               [sg.Text("")],
-               [sg.Text("Special Thanks to:", justification='center', font="Courier", size=(40, 1))],
-               [sg.Text("PySimpleGui", justification='center', font="Courier", size=(40, 1))],
-               [sg.Text("jgoldsmith", justification='center', font="Courier", size=(40, 1))]]
+    catlayout = [[sg.Text("Enter the name of the category you would like to scrape.")],
+                 [sg.Text("Category:", font="Courier"), sg.InputText(size=(30, 1), key='catname', font="Courier")],
+                 [sg.Button("Get HTML", k="CAT-HTML"), sg.Button("Scrape Subcategories"), sg.Button("Scrape Pages in Category")],
+                 [sg.Text(size=(40, 1))],
+                 [sg.Text(size=(50, 1), key="CAT-STAT", justification="center")],
+                 [sg.ML(size=(50, 12), key="CAT-OUT", font=("Courier", 10))],
+                 [sg.Text(size=(40, 1))]]
 
-mainlayout = [[sg.Image('wikiscrapegui.png', pad=((0, 0), (15, 15)), key='LOGO', size=(400, 50))],
-              [sg.TabGroup([[sg.Tab('Page', pagelayout, element_justification='c'), sg.Tab('Category', catlayout, element_justification='c'),
-                             sg.Tab('About', aboutlayout, element_justification='c')]],
-                           key='TAB-GROUP', tab_location='top', border_width=10, pad=((10, 10), (10, 10)))]]
+    aboutlayout = [[sg.Text("")],
+                   [sg.Text("WikiScrapeGui by TetrisKid48", justification='center', font="Courier", size=(40, 1))],
+                   [sg.Text("Developed in 2021", justification='center', font="Courier", size=(40, 1))],
+                   [sg.Text("")],
+                   [sg.Text("Special Thanks to:", justification='center', font="Courier", size=(40, 1))],
+                   [sg.Text("PySimpleGui", justification='center', font="Courier", size=(40, 1))],
+                   [sg.Text("jgoldsmith", justification='center', font="Courier", size=(40, 1))]]
 
-window = sg.Window('WikiScrapeGui', size=(500, 500), element_justification='c',
-                   icon=icon).Layout(mainlayout)
+    themelayout = [[sg.Text("Change the theme of the GUI here!")],
+                   [sg.Listbox(values=sg.theme_list(), size=(20, 12), key='THEME_LISTBOX', enable_events=True)],
+                   [sg.Button("Set Theme")]]
+
+    mainlayout = [[sg.Image('wikiscrapegui.png', pad=((0, 0), (15, 15)), key='LOGO', size=(400, 50))],
+                  [sg.TabGroup([[sg.Tab('Page', pagelayout, element_justification='c'), sg.Tab('Category', catlayout, element_justification='c'),
+                                 sg.Tab('Theme', themelayout), sg.Tab('About', aboutlayout, element_justification='c')]],
+                               key='TAB-GROUP', tab_location='top', border_width=10, pad=((10, 10), (10, 10)))]]
+
+    return sg.Window('WikiScrapeGui', size=(500, 500), element_justification='c', icon=icon).Layout(mainlayout)
+
+
+window = make_window()
+
 print("[LOG] Main menu has been launched.")
 while True:
     event, values = window.read()
     if event in (sg.WIN_CLOSED, "Exit"):
         break
+    elif event == "Set Theme":
+        print("[LOG] Clicked Set Theme!")
+        theme_chosen = values['THEME_LISTBOX'][0]
+        print("[LOG] User Chose Theme: " + str(theme_chosen))
+        window.close()
+        sg.theme(theme_chosen)
+        window = make_window()
+
     elif event == "Get Content":
         name = str(values['pagename'])
 
@@ -56,9 +75,11 @@ while True:
             window['PAGE-OUT'].update(content)
 
         except wikipedia.exceptions.PageError:
-            window['PAGE-STAT'].update("Error Occured. Couldn't find a page with that title.", text_color='red')
+            window['PAGE-STAT'].update("PageError Occured: Couldn't find a page with that title.", text_color='red')
+            window['PAGE-OUT'].update("")
         except wikipedia.exceptions.DisambiguationError:
-            window['PAGE-STAT'].update("Error Occured. Page name is not specific enough.", text_color='red')
+            window['PAGE-STAT'].update("DisambiguationError Occured: Page name is not specific enough.", text_color='red')
+            window['PAGE-OUT'].update("")
 
     elif event == "PAGE-HTML":
         pagename = str(values['pagename'])
@@ -76,7 +97,36 @@ while True:
             window['PAGE-OUT'].update(htmlcode)
 
         except urllib.error.HTTPError:
-            window['PAGE-STAT'].update("Error Occured. Page link could not be opened.", text_color='red')
+            window['PAGE-STAT'].update("HTTPError Occured: Page link could not be opened.", text_color='red')
+            window['PAGE-OUT'].update("")
+
+    elif event == "Scrape Infobox":
+        pagename = str(values['pagename'])
+        pagename = pagename.replace(" ", "_")
+        link = linktemp + pagename
+
+        try:
+            fp = urllib.request.urlopen(link)
+            mybytes = fp.read()
+            htmlcode = mybytes.decode("utf8")
+            fp.close()
+
+            # code to read infobox will go below here
+
+            while True:
+                location1 = htmlcode.index("scope=\"row\">")
+                location2 = htmlcode.index("</th>")
+                infotemp = htmlcode[location1:location2]
+                infodata = infodata + infotemp
+                break
+
+            textfile.write(infodata)
+            window['PAGE-STAT'].update("This feature is currently unfinished.", text_color='yellow')
+            window['PAGE-OUT'].update(infodata)
+
+        except urllib.error.HTTPError:
+            window['PAGE-STAT'].update("HTTPError Occured: Page link could not be opened.", text_color='red')
+            window['PAGE-OUT'].update("")
 
     elif event == "CAT-HTML":
         catname = str(values['catname'])
@@ -95,7 +145,8 @@ while True:
             window['CAT-OUT'].update(htmlcode)
 
         except urllib.error.HTTPError:
-            window['CAT-STAT'].update("Error Occured. Page link could not be opened.", text_color='red')
+            window['CAT-STAT'].update("HTTPError Occured: Page link could not be opened.", text_color='red')
+            window['CAT-OUT'].update("")
 
     elif event == "Scrape Subcategories" or "Scrape Pages in Category":
         print("[LOG] A scrape button was pressed in the Category tab.")
@@ -112,7 +163,8 @@ while True:
             htmlcode = mybytes.decode("utf8")
             fp.close()
         except urllib.error.HTTPError:
-            window['CAT-STAT'].update("Error Occured. Category page link could not be opened.", text_color='red')
+            window['CAT-STAT'].update("HTTPError Occured: Category page link could not be opened.", text_color='red')
+            window['CAT-OUT'].update("")
             event = "Pass"
 
         if event == "Scrape Subcategories":
@@ -174,4 +226,10 @@ while True:
             window['CAT-OUT'].update(pageliststr)
 
 textfile.close()
+
+themefile.close()
+themefile = open('theme.txt', 'w')
+themefile.write(theme_chosen)
+themefile.close()
+
 window.close()
