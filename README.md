@@ -12,16 +12,15 @@ Enjoy!
 
 # Screenshots
 #### Screenshots might not always be perfectly up to date.
-![image](https://user-images.githubusercontent.com/67118737/109688994-de2da480-7b52-11eb-9297-43f8877d73d8.png)
-![image](https://user-images.githubusercontent.com/67118737/109689054-ed145700-7b52-11eb-9d64-a18743d055ea.png)
+![image](https://user-images.githubusercontent.com/67118737/112557187-41050b00-8da2-11eb-96e4-9336e9e0c170.png)
+![image](https://user-images.githubusercontent.com/67118737/112557229-5ed27000-8da2-11eb-895b-6dfba6ea5857.png)
 
 # More Information
-Any scraped data will be saved to an output.txt in the same directory as the program.
+Any scraped data will be saved to an output.txt in the same directory as the program, and the theme you choose will be saved to theme.txt.
 
 ### Planned features include:
 Infobox scraping  
 Scraping "Page Information"  
-Improved and/or animated logo  
-Ability to change GUI theme  
+Improved and/or animated logo
 Menu to choose a page when a disambiguation error occurs  
 Compatibility with special symbols in URLs
