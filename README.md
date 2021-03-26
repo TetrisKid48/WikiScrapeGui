@@ -25,4 +25,4 @@ Infobox scraping
 Scraping "Page Information"  
 Improved and/or animated logo  
 Menu to choose a page when a disambiguation error occurs  
-Compatibility with special symbols in URLs
+Compatibility with more special symbols in URLs
