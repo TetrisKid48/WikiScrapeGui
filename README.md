@@ -21,6 +21,6 @@ Any scraped data will be saved to an output.txt in the same directory as the pro
 ### Planned features include:
 Infobox scraping  
 Scraping "Page Information"  
-Improved and/or animated logo
+Improved and/or animated logo  
 Menu to choose a page when a disambiguation error occurs  
 Compatibility with special symbols in URLs
