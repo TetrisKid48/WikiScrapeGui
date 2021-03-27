@@ -27,7 +27,7 @@ def encode_url(s):
 def make_window():
     pagelayout = [[sg.Text("Enter the name of the page you would like to scrape.")],
                   [sg.InputText(size=(40, 1), key='pagename', font="Courier")],
-                  [sg.Button("Get Content"), sg.Button("Get HTML", k="PAGE-HTML"), sg.Button("Scrape Infobox")],
+                  [sg.Button("Get Content"), sg.Button("Get HTML", k="PAGE-HTML"), sg.Button("Scrape Infobox", key='INFO-SCRAPE')],
                   [sg.Text(size=(40, 1))],
                   [sg.Text(size=(50, 1), key="PAGE-STAT", justification="center")],
                   [sg.ML(size=(50, 12), key="PAGE-OUT", font=("Courier", 10))],
@@ -53,9 +53,17 @@ def make_window():
                    [sg.Listbox(values=sg.theme_list(), size=(30, 12), key='THEME_LISTBOX', enable_events=True)],
                    [sg.Button("Set Theme")]]
 
+    searchlayout = [[sg.Text("Search for specific page names here.")],
+                    [sg.InputText(size=(40, 1), key='searchbar', font="Courier")],
+                    [sg.Button("Search!")],
+                    [sg.Text(size=(40, 1))],
+                    [sg.Text(size=(50, 1), key="SEARCH-STAT", justification="center")],
+                    [sg.ML(size=(50, 12), key="SEARCH-OUT", font=("Courier", 10))]]
+
     mainlayout = [[sg.Image('wikiscrapegui.png', pad=((0, 0), (15, 15)), key='LOGO', size=(400, 50))],
                   [sg.TabGroup([[sg.Tab('Page', pagelayout, element_justification='c'), sg.Tab('Category', catlayout, element_justification='c'),
-                                 sg.Tab('Theme', themelayout, element_justification='c'), sg.Tab('About', aboutlayout, element_justification='c')]],
+                                 sg.Tab('Search', searchlayout, element_justification='c'), sg.Tab('Theme', themelayout, element_justification='c'),
+                                 sg.Tab('About', aboutlayout, element_justification='c')]],
                                key='TAB-GROUP', tab_location='top', border_width=10, pad=((10, 10), (10, 10)))]]
 
     return sg.Window('WikiScrapeGui', size=(500, 500), element_justification='c', icon=icon).Layout(mainlayout)
@@ -75,6 +83,13 @@ while True:
         window.close()
         sg.theme(theme_chosen)
         window = make_window()
+
+    elif event == "Search!":
+        query = str(values['searchbar'])
+        results = wikipedia.search(query)
+
+        window['SEARCH-STAT'].update("Here are your search results:", text_color='green')
+        window['SEARCH-OUT'].update(results)
 
     elif event == "Get Content":
         name = str(values['pagename'])
@@ -112,7 +127,7 @@ while True:
             window['PAGE-STAT'].update("HTTPError Occured: Page link could not be opened.", text_color='red')
             window['PAGE-OUT'].update(link)
 
-    elif event == "Scrape Infobox":
+    elif event == 'INFO-SCRAPE':
         pagename = str(values['pagename'])
         pagename = encode_url(pagename)
         link = linktemp + pagename
@@ -123,8 +138,13 @@ while True:
             htmlcode = mybytes.decode("utf8")
             fp.close()
 
-            # code to read infobox will go below here
+        except urllib.error.HTTPError:
+            window['PAGE-STAT'].update("HTTPError Occured: Page link could not be opened.", text_color='red')
+            window['PAGE-OUT'].update(link)
 
+        # code to read infobox will go below here
+
+        try:
             while True:
                 location1 = htmlcode.index("scope=\"row\">")
                 location2 = htmlcode.index("</th>")
@@ -133,12 +153,12 @@ while True:
                 break
 
             textfile.write(infodata)
-            window['PAGE-STAT'].update("This feature is currently unfinished.", text_color='yellow')
+            window['PAGE-STAT'].update("This feature is currently unfinished.", text_color='black')
             window['PAGE-OUT'].update(infodata)
 
-        except urllib.error.HTTPError:
-            window['PAGE-STAT'].update("HTTPError Occured: Page link could not be opened.", text_color='red')
-            window['PAGE-OUT'].update(link)
+        except ValueError:
+            window['PAGE-STAT'].update("ValueError: Couldn't find infobox contents.", text_color='red')
+            window['PAGE-OUT'].update("")
 
     elif event == "CAT-HTML":
         catname = str(values['catname'])
@@ -237,10 +257,13 @@ while True:
             window['CAT-OUT'].update(pageliststr)
 
 textfile.close()
+themefile.close()
 
-themefile.close()
-themefile = open('theme.txt', 'w')
-themefile.write(theme_chosen)
-themefile.close()
+if len(theme_chosen) == 0:
+    pass
+else:
+    themefile = open('theme.txt', 'w')
+    themefile.write(theme_chosen)
+    themefile.close()
 
 window.close()
