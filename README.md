@@ -14,11 +14,16 @@ If you have any problems with using the program, please [open an issue.](https:/
 
 # Screenshots
 **Screenshots might not always be perfectly up to date.**  
-![image](https://user-images.githubusercontent.com/67118737/112557187-41050b00-8da2-11eb-96e4-9336e9e0c170.png)
-![image](https://user-images.githubusercontent.com/67118737/112557229-5ed27000-8da2-11eb-895b-6dfba6ea5857.png)
+![image](https://user-images.githubusercontent.com/67118737/112706570-834e4b00-8e7b-11eb-80a3-386e3a3be73d.png)
+![image](https://user-images.githubusercontent.com/67118737/112706592-aaa51800-8e7b-11eb-9343-74674675aa6f.png)
+![image](https://user-images.githubusercontent.com/67118737/112706612-c7d9e680-8e7b-11eb-8d71-80df7fc2ff71.png)
+![image](https://user-images.githubusercontent.com/67118737/112706616-d58f6c00-8e7b-11eb-909b-d936d884ef95.png)
+
 
 # More Information
-Any scraped data will be saved to an output.txt in the same directory as the program, and the theme you choose will be saved to theme.txt.
+Any scraped data will be saved to an output.txt in the same directory as the program.  
+The theme you choose will be saved to theme.txt.  
+The default theme is Material1.
 
 ### Planned features include:
 Infobox scraping  
@@ -26,4 +31,3 @@ Scraping "Page Information"
 Improved and/or animated logo  
 Menu to choose a page when a disambiguation error occurs  
 Compatibility with more special symbols in URLs  
-Search tab to find specific pages without leaving the program
