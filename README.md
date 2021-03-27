@@ -16,9 +16,8 @@ If you have any problems with using the program, please [open an issue.](https:/
 **Screenshots might not always be perfectly up to date.**  
 ![image](https://user-images.githubusercontent.com/67118737/112706570-834e4b00-8e7b-11eb-80a3-386e3a3be73d.png)
 ![image](https://user-images.githubusercontent.com/67118737/112706592-aaa51800-8e7b-11eb-9343-74674675aa6f.png)
-![image](https://user-images.githubusercontent.com/67118737/112706612-c7d9e680-8e7b-11eb-8d71-80df7fc2ff71.png)
+![image](https://user-images.githubusercontent.com/67118737/112707198-f1950c80-8e7f-11eb-90f1-22a3a4110165.png)
 ![image](https://user-images.githubusercontent.com/67118737/112706616-d58f6c00-8e7b-11eb-909b-d936d884ef95.png)
-
 
 # More Information
 Any scraped data will be saved to an output.txt in the same directory as the program.  
