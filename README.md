@@ -26,7 +26,8 @@ The default theme is Material1.
 
 ### Planned features include:
 Infobox scraping  
-Scraping "Page Information"  
 Improved and/or animated logo  
-Menu to choose a page when a disambiguation error occurs  
 Compatibility with more special symbols in URLs  
+Menu to choose a page when a disambiguation error occurs  
+Option to scrape the "Page Information" page of a wikipedia page  
+Menu to do mass scraping of the content of pages in a category, with lots of advanced options  
