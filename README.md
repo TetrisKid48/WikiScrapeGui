@@ -25,4 +25,5 @@ Infobox scraping
 Scraping "Page Information"  
 Improved and/or animated logo  
 Menu to choose a page when a disambiguation error occurs  
-Compatibility with more special symbols in URLs
+Compatibility with more special symbols in URLs  
+Search tab to find specific pages without leaving the program
