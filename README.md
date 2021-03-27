@@ -24,9 +24,10 @@ Any scraped data will be saved to an output.txt in the same directory as the pro
 The theme you choose will be saved to theme.txt.  
 The default theme is Material1.
 
-### Planned features include:
-Infobox scraping  
-Improved and/or animated logo  
+### Planned features, sorted by priority:
+Compatibility with all special symbols in urls  
 Menu to choose a page when a disambiguation error occurs  
+Infobox scraping  
+Big menu for scraping tons of pages in a category with tons of options  
 Option to scrape the "Page Information" page of a wikipedia page  
-Menu to do mass scraping of the content of pages in a category, with lots of advanced options  
+Improved and/or animated logo  
