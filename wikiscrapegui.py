@@ -6,6 +6,7 @@ textfile = open('output.txt', "w", encoding="utf-8")
 themefile = open('theme.txt')
 linktemp = "https://en.wikipedia.org/wiki/"
 infodata = ""
+results = ""
 
 icon = b'iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAAEdJREFUWIXt1LERACAIBMHH0iyKIiiK1jA1xIjAu5iRHQIlot8zSfIdNbE80m1NLL4DAAAAAHsZ7v6Ykd5+d/wCAAAAAEBEBwkWCCdsOlQrAAAAAElFTkSuQmCC'
 
@@ -17,7 +18,8 @@ def encode_url(s):
         ('%', '%25'),
         ("'", '%27'),
         (' ', '_'),
-        ('&', '%26')
+        ('&', '%26'),
+        ('+', '%2B')
     )
     for code in htmlcodes:
         s = s.replace(code[0], code[1])
@@ -86,10 +88,16 @@ while True:
 
     elif event == "Search!":
         query = str(values['searchbar'])
-        results = wikipedia.search(query)
+        resultslist = wikipedia.search(query)
+
+        for x in range(len(resultslist)):
+            results = results + resultslist[x] + "\n"
 
         window['SEARCH-STAT'].update("Here are your search results:", text_color='green')
         window['SEARCH-OUT'].update(results)
+
+        resultslist = ""
+        results = ""
 
     elif event == "Get Content":
         name = str(values['pagename'])
@@ -259,11 +267,12 @@ while True:
 textfile.close()
 themefile.close()
 
-if len(theme_chosen) == 0:
-    pass
-else:
-    themefile = open('theme.txt', 'w')
-    themefile.write(theme_chosen)
-    themefile.close()
+themefile = open('theme.txt', 'w')
 
+try:
+    themefile.write(theme_chosen)
+except NameError:
+    themefile.write(sg.theme())
+
+themefile.close()
 window.close()
