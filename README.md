@@ -4,7 +4,7 @@ Note: This project is still a work in progress and many features are sure to be 
 
 # Usage
 **Note: This has only been tested on Windows 10 with Python 3.9.2.**  
-Download and extract the zip file of the repository.  
+Download and extract the zip file of this repository.  
 Type this into the command prompt to install the needed libraries:  
 `pip install wikipedia pysimplegui`  
 Run `wikiscrapegui.py`  
@@ -20,16 +20,17 @@ If you have any problems with using the program, please [open an issue.](https:/
 ![image](https://user-images.githubusercontent.com/67118737/112740804-f922e700-8f4d-11eb-9c2c-017dc6ff208a.png)
 
 # More Information
-Any scraped data will be saved to an output.txt in the same directory as the program.  
-The theme you choose will be saved to theme.txt.  
-The default theme is Material1.
+In "one output file" mode, all scraped data will be saved to an output.txt file in the outputs folder in the same directory as the program. Scraping another page will overwrite the other text while in this mode.  
+In "mutlifile" mode, a new text file will be made in the outputs folder each time data is scraped. The title will specify what is in the file, e.g. "Fish-content.txt" would be the content of the wikipedia page for fish.
+User settings are be saved to the settings.ini file.  
+The default theme is Material1.  
 
 ### Planned features, sorted by priority:
-Settings menu to change the where/how output is saved  
 Ability to scrape multi-page categories  
 Compatibility with all special symbols in urls  
 Menu to choose a page when a disambiguation error occurs  
 Infobox scraping  
+Better OSX/Linux support  
 Big menu for scraping tons of pages in a category with tons of options  
 Option to scrape the "Page Information" page of a wikipedia page  
 Improved and/or animated logo  
