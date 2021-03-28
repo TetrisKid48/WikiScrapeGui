@@ -45,7 +45,7 @@ def make_window():
                   [sg.InputText(size=(40, 1), key='pagename', font="Courier", justification="center")],
                   [sg.Button("Get Content"), sg.Button("Get HTML", k="PAGE-HTML")],
                   [sg.Text(size=(40, 1))],
-                  [sg.Text(size=(50, 1), key="PAGE-STAT", justification="center")],
+                  [sg.Text(size=(65, 1), key="PAGE-STAT", justification="center")],
                   [sg.ML(size=(65, 12), key="PAGE-OUT", font=("Courier", 10))],
                   [sg.Text(size=(40, 1))]]
 
@@ -53,7 +53,7 @@ def make_window():
                  [sg.Text("Category:", font="Courier"), sg.InputText(size=(30, 1), key='catname', font="Courier")],
                  [sg.Button("Get HTML", k="CAT-HTML"), sg.Button("Scrape Subcategories"), sg.Button("Scrape Pages in Category")],
                  [sg.Text(size=(40, 1))],
-                 [sg.Text(size=(50, 1), key="CAT-STAT", justification="center")],
+                 [sg.Text(size=(65, 1), key="CAT-STAT", justification="center")],
                  [sg.ML(size=(65, 12), key="CAT-OUT", font=("Courier", 10))],
                  [sg.Text(size=(40, 1))]]
 
@@ -61,12 +61,13 @@ def make_window():
                     [sg.InputText(size=(40, 1), key='searchbar', font="Courier", justification="center")],
                     [sg.Button("Search!")],
                     [sg.Text(size=(40, 1))],
-                    [sg.Text(size=(50, 1), key="SEARCH-STAT", justification="center")],
+                    [sg.Text(size=(65, 1), key="SEARCH-STAT", justification="center")],
                     [sg.ML(size=(65, 12), key="SEARCH-OUT", font=("Courier", 10), justification="center")]]
 
     settingslayout = [[sg.Text("Change the theme of the GUI here!")],
                       [sg.Listbox(values=sg.theme_list(), size=(30, 12), key='THEME_LISTBOX', enable_events=True),
-                       sg.Frame('Options (WIP)', font='Courier 15', layout=[
+                       sg.Frame('Options (WIP)', font='Courier 15', element_justification='center', layout=[
+                                [sg.Text('Output Options', font='Courier')],
                                 [sg.Radio('1 output file', 'RadioOutput', k='1OUT', enable_events=True),
                                  sg.Radio('New file for each output', 'RadioOutput', k='MULTIOUT', enable_events=True)]])],
                       [sg.Button("Set Theme")],
@@ -102,9 +103,11 @@ while True:
 
     elif event == '1OUT':
         oneoutput = 'True'
+        print('[LOG] One output set to true.')
 
     elif event == 'MULTIOUT':
         oneoutput = 'False'
+        print('[LOG] One output set to false.')
 
     elif event == "Set Theme":
         print("[LOG] Clicked Set Theme!")
@@ -144,10 +147,20 @@ while True:
 
         try:
             content = wikipedia.page(name, auto_suggest=False).content
-            textfile.write(content)
+            if oneoutput == 'True':
+                textfile.write(content)
 
-            window['PAGE-STAT'].update("Success! This text was saved to output.txt:", text_color='green')
-            window['PAGE-OUT'].update(content)
+                window['PAGE-STAT'].update("Success! This text was saved to output.txt:", text_color='green')
+                window['PAGE-OUT'].update(content)
+
+            elif oneoutput == 'False':
+                multiname = "Outputs/" + name + "-content.txt"
+                multifile = open(multiname, "w", encoding="utf-8")
+                multifile.write(content)
+                multifile.close()
+
+                window['PAGE-STAT'].update("Success! This text was saved to " + name + "-content.txt:", text_color='green')
+                window['PAGE-OUT'].update(content)
 
         except wikipedia.exceptions.PageError:
             window['PAGE-STAT'].update("PageError Occured: Couldn't find a page with that title.", text_color='red')
@@ -162,9 +175,18 @@ while True:
         try:
             htmlcode = wikipedia.page(pagename).html()
 
-            textfile.write(htmlcode)
-            window['PAGE-STAT'].update("Success! This text was saved to output.txt:", text_color='green')
-            window['PAGE-OUT'].update(htmlcode)
+            if oneoutput == 'True':
+                textfile.write(htmlcode)
+                window['PAGE-STAT'].update("Success! This text was saved to output.txt:", text_color='green')
+                window['PAGE-OUT'].update(htmlcode)
+            elif oneoutput == 'False':
+                multiname = "Outputs/" + name + "-htmlcode.txt"
+                multifile = open(multiname, "w", encoding="utf-8")
+                multifile.write(htmlcode)
+                multifile.close()
+
+                window['PAGE-STAT'].update("Success! This text was saved to " + name + "-htmlcode.txt:", text_color='green')
+                window['PAGE-OUT'].update(htmlcode)
 
         except wikipedia.exceptions.PageError:
             window['PAGE-STAT'].update("PageError Occured: Couldn't find a page with that title.", text_color='red')
@@ -187,9 +209,18 @@ while True:
                     infodata = infodata + infotemp
                     break
 
-                textfile.write(infodata)
-                window['PAGE-STAT'].update("This feature is currently unfinished.", text_color='black')
-                window['PAGE-OUT'].update(infodata)
+                if oneoutput == 'True':
+                    textfile.write(infodata)
+                    window['PAGE-STAT'].update("This text was saved to output.txt:", text_color='black')
+                    window['PAGE-OUT'].update(infodata)
+                elif oneoutput == 'False':
+                    multiname = "Outputs/" + name + "-infodata.txt"
+                    multifile = open(multiname, "w", encoding="utf-8")
+                    multifile.write(infodata)
+                    multifile.close()
+
+                    window['PAGE-STAT'].update("This text was saved to " + name + "-infodata.txt:", text_color='green')
+                    window['PAGE-OUT'].update(infodata)
 
             except ValueError:
                 window['PAGE-STAT'].update("ValueError: Couldn't find infobox contents.", text_color='red')
@@ -203,8 +234,8 @@ while True:
             window['PAGE-OUT'].update("")
 
     elif event == "CAT-HTML":
-        catname = str(values['catname'])
-        catname = encode_url(catname)
+        name = str(values['catname'])
+        catname = encode_url(name)
         catname = "Category:" + catname
         link = linktemp + catname
 
@@ -214,9 +245,18 @@ while True:
             htmlcode = mybytes.decode("utf8")
             fp.close()
 
-            textfile.write(htmlcode)
-            window['CAT-STAT'].update("Success! This text was saved to output.txt:", text_color='green')
-            window['CAT-OUT'].update(htmlcode)
+            if oneoutput == 'True':
+                textfile.write(htmlcode)
+                window['CAT-STAT'].update("Success! This text was saved to output.txt:", text_color='green')
+                window['CAT-OUT'].update(htmlcode)
+            elif oneoutput == 'False':
+                multiname = "Outputs/category-" + name + "-htmlcode.txt"
+                multifile = open(multiname, "w", encoding="utf-8")
+                multifile.write(htmlcode)
+                multifile.close()
+
+                window['CAT-STAT'].update("This text was saved to category-" + name + "-htmlcode.txt:", text_color='green')
+                window['CAT-OUT'].update(htmlcode)
 
         except urllib.error.HTTPError:
             window['CAT-STAT'].update("HTTPError Occured: Page link could not be opened:", text_color='red')
@@ -225,8 +265,8 @@ while True:
     elif event == "Scrape Subcategories" or "Scrape Pages in Category":
 
         window['CAT-STAT'].update("")
-        catname = str(values['catname'])
-        catname = encode_url(catname)
+        name = str(values['catname'])
+        catname = encode_url(name)
         catname = "Category:" + catname
         link = linktemp + catname
 
@@ -264,9 +304,19 @@ while True:
 
                 catliststr = catliststr + catlist[x] + "\n"
 
-            textfile.write(catliststr)
-            window['CAT-STAT'].update("Success! This text was saved to output.txt:", text_color='green')
-            window['CAT-OUT'].update(catliststr)
+            if oneoutput == 'True':
+                textfile.write(catliststr)
+                window['CAT-STAT'].update("Success! This text was saved to output.txt:", text_color='green')
+                window['CAT-OUT'].update(catliststr)
+
+            elif oneoutput == 'False':
+                multiname = "Outputs/category-" + name + "-subcats.txt"
+                multifile = open(multiname, "w", encoding="utf-8")
+                multifile.write(catliststr)
+                multifile.close()
+
+                window['CAT-STAT'].update("This text was saved to category-" + name + "-subcats.txt:", text_color='green')
+                window['CAT-OUT'].update(catliststr)
 
         if event == "Scrape Pages in Category":
             print("[LOG] User pressed 'Page Names' button.")
@@ -295,9 +345,19 @@ while True:
 
                 pageliststr = pageliststr + pagelist[x] + "\n"
 
-            textfile.write(pageliststr)
-            window['CAT-STAT'].update("Success! This text was saved to output.txt:", text_color='green')
-            window['CAT-OUT'].update(pageliststr)
+            if oneoutput == 'True':
+                textfile.write(pageliststr)
+                window['CAT-STAT'].update("Success! This text was saved to output.txt:", text_color='green')
+                window['CAT-OUT'].update(pageliststr)
+
+            elif oneoutput == 'False':
+                multiname = "Outputs/category-" + name + "-pages.txt"
+                multifile = open(multiname, "w", encoding="utf-8")
+                multifile.write(pageliststr)
+                multifile.close()
+
+                window['CAT-STAT'].update("This text was saved to category-" + name + "-pages.txt:", text_color='green')
+                window['CAT-OUT'].update(pageliststr)
 
 textfile.close()
 
