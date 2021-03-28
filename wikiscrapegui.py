@@ -2,16 +2,26 @@ import wikipedia
 import urllib.request
 import PySimpleGUI as sg
 import os
+import configparser
 
-textfile = open('output.txt', "w", encoding="utf-8")
-themefile = open('theme.txt')
+config = configparser.ConfigParser()
+config.read('settings.ini')
+
+textfile = open('Outputs/output.txt', "w", encoding="utf-8")
+config.read_file(open('settings.ini'))
 linktemp = "https://en.wikipedia.org/wiki/"
 infodata = ""
 results = ""
 
+theme = config.get('Options', 'Theme')
+oneoutput = config.get('Options', 'OneOutput')
+
+print(theme)
+print(oneoutput)
+
 iconcode = b'iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAAEdJREFUWIXt1LERACAIBMHH0iyKIiiK1jA1xIjAu5iRHQIlot8zSfIdNbE80m1NLL4DAAAAAHsZ7v6Ykd5+d/wCAAAAAEBEBwkWCCdsOlQrAAAAAElFTkSuQmCC'
 
-sg.theme(themefile.read())
+sg.theme(theme)
 
 
 def encode_url(s):
@@ -54,10 +64,13 @@ def make_window():
                     [sg.Text(size=(50, 1), key="SEARCH-STAT", justification="center")],
                     [sg.ML(size=(65, 12), key="SEARCH-OUT", font=("Courier", 10), justification="center")]]
 
-    themelayout = [[sg.Text("Change the theme of the GUI here!")],
-                   [sg.Listbox(values=sg.theme_list(), size=(30, 12), key='THEME_LISTBOX', enable_events=True)],
-                   [sg.Button("Set Theme")],
-                   [sg.Button("Set to Default")]]
+    settingslayout = [[sg.Text("Change the theme of the GUI here!")],
+                      [sg.Listbox(values=sg.theme_list(), size=(30, 12), key='THEME_LISTBOX', enable_events=True),
+                       sg.Frame('Options (WIP)', font='Courier 15', layout=[
+                                [sg.Radio('1 output file', 'RadioOutput', k='1OUT', enable_events=True),
+                                 sg.Radio('New file for each output', 'RadioOutput', k='MULTIOUT', enable_events=True)]])],
+                      [sg.Button("Set Theme")],
+                      [sg.Button("Set to Default")]]
 
     aboutlayout = [[sg.Text("")],
                    [sg.Text("WikiScrapeGui by TetrisKid48", justification='center', font="Courier", size=(40, 1))],
@@ -69,7 +82,7 @@ def make_window():
 
     mainlayout = [[sg.Image('wikiscrapegui.png', pad=((0, 0), (15, 15)), key='LOGO', size=(400, 50))],
                   [sg.TabGroup([[sg.Tab('Page', pagelayout, element_justification='c'), sg.Tab('Category', catlayout, element_justification='c'),
-                                 sg.Tab('Search', searchlayout, element_justification='c'), sg.Tab('Theme', themelayout, element_justification='c'),
+                                 sg.Tab('Search', searchlayout, element_justification='c'), sg.Tab('Settings', settingslayout),
                                  sg.Tab('About', aboutlayout, element_justification='c')]],
                                key='TAB-GROUP', tab_location='top', border_width=10, pad=((10, 10), (10, 10)))]]
 
@@ -87,19 +100,25 @@ while True:
     elif event == 'Open Github Repo':
         os.startfile("https://github.com/TetrisKid48/WikiScrapeGui")
 
+    elif event == '1OUT':
+        oneoutput = 'True'
+
+    elif event == 'MULTIOUT':
+        oneoutput = 'False'
+
     elif event == "Set Theme":
         print("[LOG] Clicked Set Theme!")
-        theme_chosen = values['THEME_LISTBOX'][0]
-        print("[LOG] User Chose Theme: " + str(theme_chosen))
+        theme = values['THEME_LISTBOX'][0]
+        print("[LOG] User Chose Theme: " + str(theme))
         window.close()
-        sg.theme(theme_chosen)
+        sg.theme(theme)
         window = make_window()
 
     elif event == "Set to Default":
-        theme_chosen = "Material1"
+        theme = "Material1"
         print("[LOG] Theme set to default: Material1")
         window.close()
-        sg.theme(theme_chosen)
+        sg.theme(theme)
         window = make_window()
 
     elif event == "Search!":
@@ -281,14 +300,11 @@ while True:
             window['CAT-OUT'].update(pageliststr)
 
 textfile.close()
-themefile.close()
 
-themefile = open('theme.txt', 'w')
+config['Options']['Theme'] = theme
+config['Options']['OneOutput'] = oneoutput
 
-try:
-    themefile.write(theme_chosen)
-except NameError:
-    themefile.write(sg.theme())
+with open('settings.ini', 'w') as configfile:
+    config.write(configfile)
 
-themefile.close()
 window.close()
