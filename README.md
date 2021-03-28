@@ -14,10 +14,10 @@ If you have any problems with using the program, please [open an issue.](https:/
 
 # Screenshots
 **Screenshots might not always be perfectly up to date.**  
-![image](https://user-images.githubusercontent.com/67118737/112706570-834e4b00-8e7b-11eb-80a3-386e3a3be73d.png)
-![image](https://user-images.githubusercontent.com/67118737/112706592-aaa51800-8e7b-11eb-9343-74674675aa6f.png)
-![image](https://user-images.githubusercontent.com/67118737/112707198-f1950c80-8e7f-11eb-90f1-22a3a4110165.png)
-![image](https://user-images.githubusercontent.com/67118737/112706616-d58f6c00-8e7b-11eb-909b-d936d884ef95.png)
+![image](https://user-images.githubusercontent.com/67118737/112738347-822f2380-8f38-11eb-9baa-99b7865b780c.png)
+![image](https://user-images.githubusercontent.com/67118737/112738363-b3a7ef00-8f38-11eb-9eea-df8059e4abec.png)
+![image](https://user-images.githubusercontent.com/67118737/112738336-6a579f80-8f38-11eb-9c01-58913c8b4f92.png)
+![image](https://user-images.githubusercontent.com/67118737/112738368-c02c4780-8f38-11eb-8066-e83b20fa25bb.png)
 
 # More Information
 Any scraped data will be saved to an output.txt in the same directory as the program.  
@@ -25,6 +25,8 @@ The theme you choose will be saved to theme.txt.
 The default theme is Material1.
 
 ### Planned features, sorted by priority:
+Settings menu to change the where/how output is saved  
+Ability to scrape multi-page categories  
 Compatibility with all special symbols in urls  
 Menu to choose a page when a disambiguation error occurs  
 Infobox scraping  
