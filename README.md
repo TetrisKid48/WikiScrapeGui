@@ -22,7 +22,7 @@ If you have any problems with using the program, please [open an issue.](https:/
 # More Information
 In "one output file" mode, all scraped data will be saved to an output.txt file in the outputs folder in the same directory as the program. Scraping another page will overwrite the other text while in this mode.  
 In "mutlifile" mode, a new text file will be made in the outputs folder each time data is scraped. The title will specify what is in the file, e.g. "Fish-content.txt" would be the content of the wikipedia page for fish.
-User settings are be saved to the settings.ini file.  
+User settings are saved to the settings.ini file.  
 The default theme is Material1.  
 
 ### Planned features, sorted by priority:
